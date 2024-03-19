@@ -336,6 +336,35 @@ describe('paste-markdown', function () {
       assert.equal(textarea.value, markdownSentence)
     })
 
+    it('leaves plaintext links alone chrome', function () {
+      // eslint-disable-next-line github/unescaped-html-literal
+      const sentence = `<meta charset='utf-8'>
+      <p dir="auto" style="box-sizing: border-box; margin-top: 0px !important; margin-bottom: 16px; color: rgb(230, 237, 243); font-family: -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, &quot;Noto Sans&quot;, Helvetica, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(13, 17, 23); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">foo bar<br style="box-sizing: border-box;">bar baz<span> </span><a href="https://www.abcxyz.org/" rel="nofollow" style="box-sizing: border-box; background-color: transparent; color: var(--fgColor-accent, var(--color-accent-fg)); text-decoration: underline; text-underline-offset: 0.2rem;">bar</a></p><p dir="auto" style="box-sizing: border-box; margin-top: 0px; margin-bottom: 0px !important; color: rgb(230, 237, 243); font-family: -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, &quot;Noto Sans&quot;, Helvetica, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(13, 17, 23); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">baz<span> </span><a href="https://www.abcxyz.com/" rel="nofollow" style="box-sizing: border-box; background-color: transparent; color: var(--fgColor-accent, var(--color-accent-fg)); text-decoration: underline; text-underline-offset: 0.2rem;">baz</a><span> </span>foo</p>`
+      // const plaintextSentence = 'This is a link and another link\n\nLink at the beginning, link at the end'
+      const markdownSentence = `foo bar 
+bar baz [bar](https://www.abcxyz.org/) 
+  
+baz [baz](https://www.abcxyz.com/) foo`
+
+      paste(textarea, {'text/html': sentence})
+      assert.equal(textarea.value, markdownSentence)
+    })
+
+    it('leaves plaintext links alone firefox', function () {
+      // eslint-disable-next-line github/unescaped-html-literal
+      const sentence = `<meta charset='utf-8'>
+      <body>foo bar<br>
+      bar baz <a href="https://www.abcxyz.org/" rel="nofollow">bar</a></body>`
+      // const plaintextSentence = 'This is a link and another link\n\nLink at the beginning, link at the end'
+      const markdownSentence = `foo bar 
+bar baz [bar](https://www.abcxyz.org/) 
+  
+baz [baz](https://www.abcxyz.com/) foo`
+
+      paste(textarea, {'text/html': sentence})
+      assert.equal(textarea.value, markdownSentence)
+    })
+
     it('finds the right link when identical labels are present', function () {
       // eslint-disable-next-line github/unescaped-html-literal
       const sentence = `<meta charset='utf-8'><span>example<span> </span>
